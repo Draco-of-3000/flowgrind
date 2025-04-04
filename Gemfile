@@ -39,6 +39,8 @@ group :development do
   gem 'letter_opener'
 end
 
+# devise
+gem 'devise'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
