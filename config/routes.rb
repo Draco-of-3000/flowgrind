@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
-  get "onboarding/index"
-  get "onboarding/complete"
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  # Onboarding routes
+  get 'onboarding', to: 'onboarding#index'
+  get 'onboarding/welcome', to: 'onboarding#welcome'
+  get 'onboarding/how_it_works', to: 'onboarding#how_it_works'
+  get 'onboarding/account_setup', to: 'onboarding#account_setup'
+  get 'onboarding/mode_selection', to: 'onboarding#mode_selection'
+  get 'onboarding/ready', to: 'onboarding#ready'
+  
+  root to: 'onboarding#welcome'
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
