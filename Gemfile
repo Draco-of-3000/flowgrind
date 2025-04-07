@@ -31,6 +31,9 @@ gem "solid_cable"
 # mailgun mailer
 gem 'mailgun-ruby'
 
+# Assets and frontend
+gem "tailwindcss-rails"
+
 # dotenv gem
 gem 'dotenv-rails'
 

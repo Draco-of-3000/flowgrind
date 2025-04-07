@@ -1,0 +1,43 @@
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-center mb-6">Validation System</h1>
+  
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <p class="mb-4">FlowGrind uses different validation methods depending on your activity type:</p>
+    
+    <div class="mb-4">
+      <h3 class="font-semibold text-lg mb-1">Coding</h3>
+      <p>Submit your code snippet for AI validation against your stated goal</p>
+    </div>
+    
+    <div class="mb-4">
+      <h3 class="font-semibold text-lg mb-1">Writing</h3>
+      <p>Word count validation and AI analysis of content relevance</p>
+    </div>
+    
+    <div class="mb-4">
+      <h3 class="font-semibold text-lg mb-1">Reading</h3>
+      <p>Submit a brief summary for AI validation of comprehension</p>
+    </div>
+    
+    <div class="mb-4">
+      <h3 class="font-semibold text-lg mb-1">Other Activities</h3>
+      <p>Photo proof or self-certification with occasional review</p>
+    </div>
+    
+    <div class="mb-4">
+      <h3 class="font-semibold text-lg mb-1">Paired Mode</h3>
+      <p>Your partner validates your work, with both users voting on completion</p>
+    </div>
+    
+    <p class="bg-yellow-100 p-3 rounded">
+      <strong>Important:</strong> Validation is done in good faith. Repeated abuse of the system may result in account review.
+    </p>
+  </div>
+  
+  <div class="text-center">
+    <div class="flex justify-between">
+      <%= link_to "← Back", onboarding_paired_mode_path, class: "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded" %>
+      <%= link_to "Complete Onboarding", onboarding_complete_path, class: "bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded" %>
+    </div>
+  </div>
+</div>

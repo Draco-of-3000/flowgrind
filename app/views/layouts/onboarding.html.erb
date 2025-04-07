@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FlowGrind - Get Started</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen">
+    <header class="bg-red-600 text-white">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="font-bold text-xl">FlowGrind</div>
+        <div class="text-sm">
+          Onboarding Progress: Step <%= session[:onboarding_step] %> of 5
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <% if notice %>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 max-w-6xl mx-auto mt-4">
+          <%= notice %>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 max-w-6xl mx-auto mt-4">
+          <%= alert %>
+        </div>
+      <% end %>
+      
+      <%= yield %>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-center mb-6">How Credits Work</h1>
+  
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <p class="mb-4">You've received <strong>5 free credits</strong> to get started with FlowGrind!</p>
+    
+    <div class="bg-green-100 border-l-4 border-green-500 p-4 mb-4">
+      <p>Your current balance: <strong><%= current_user.credits %> credits</strong></p>
+    </div>
+    
+    <h2 class="text-xl font-semibold mb-3">Using Your Credits:</h2>
+    
+    <ul class="list-disc ml-6 mb-4">
+      <li class="mb-2">Stake 1 or more credits on each focus session</li>
+      <li class="mb-2">Successfully complete your goal? Keep your credits!</li>
+      <li class="mb-2">Miss your goal? Your credits go into the community pool</li>
+      <li class="mb-2">Earn more credits by completing sessions and helping others</li>
+    </ul>
+    
+    <h2 class="text-xl font-semibold mb-3">Adding More Credits:</h2>
+    <p>You can purchase more credits anytime from your dashboard.</p>
+    <p class="text-sm text-gray-600">$1 = 1 credit</p>
+  </div>
+  
+  <div class="text-center">
+    <div class="flex justify-between">
+      <%= link_to "← Back", onboarding_welcome_path, class: "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded" %>
+      <%= link_to "Next: Solo Mode", onboarding_solo_mode_path, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded" %>
+    </div>
+  </div>
+</div>

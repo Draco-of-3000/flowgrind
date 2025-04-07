@@ -1,0 +1,59 @@
+<div class="hidden md:flex w-64 flex-col border-r bg-muted/30 fixed h-full">
+  <div class="flex h-16 items-center border-b px-6">
+    <%= link_to dashboard_path, class: "flex items-center gap-2 font-semibold" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-primary">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span>GrindBuddy</span>
+    <% end %>
+  </div>
+  <div class="flex-1 overflow-auto py-2">
+    <nav class="grid items-start px-4 text-sm font-medium">
+      <%= link_to dashboard_path, class: "btn btn-ghost justify-start gap-3 px-3 #{current_page?(dashboard_path) ? 'bg-accent' : ''}" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"></path>
+          <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"></path>
+          <path d="M12 3v6"></path>
+        </svg>
+        Overview
+      <% end %>
+      <%= link_to dashboard_history_path, class: "btn btn-ghost justify-start gap-3 px-3 #{current_page?(dashboard_history_path) ? 'bg-accent' : ''}" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+          <line x1="16" x2="16" y1="2" y2="6"></line>
+          <line x1="8" x2="8" y1="2" y2="6"></line>
+          <line x1="3" x2="21" y1="10" y2="10"></line>
+        </svg>
+        Session History
+      <% end %>
+      <%= link_to dashboard_settings_path, class: "btn btn-ghost justify-start gap-3 px-3 #{current_page?(dashboard_settings_path) ? 'bg-accent' : ''}" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        Settings
+      <% end %>
+    </nav>
+  </div>
+  <div class="mt-auto p-4 border-t">
+    <div class="flex items-center gap-3 rounded-lg bg-background p-3">
+      <div class="avatar h-9 w-9">
+        <img src="<%= current_user.avatar_url || '/images/placeholder.svg' %>" alt="Avatar" />
+        <div class="avatar-fallback"><%= current_user.initials %></div>
+      </div>
+      <div class="flex-1 truncate">
+        <div class="text-sm font-medium"><%= current_user.full_name %></div>
+        <div class="text-xs text-muted-foreground"><%= current_user.email %></div>
+      </div>
+      <%= button_to destroy_user_session_path, method: :delete, class: "btn btn-ghost btn-icon h-8 w-8" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" x2="9" y1="12" y2="12"></line>
+        </svg>
+        <span class="sr-only">Log out</span>
+      <% end %>
+    </div>
+  </div>
+</div>

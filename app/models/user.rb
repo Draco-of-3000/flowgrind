@@ -24,4 +24,9 @@ class User < ApplicationRecord
   def assign_welcome_credits
     update(credits: 5.0)
   end
+
+  # Method to check if user has completed onboarding
+  def onboarding_completed?
+    self.onboarding_completed
+  end
 end

@@ -1,0 +1,47 @@
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-center mb-6">Solo Mode</h1>
+  
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <p class="mb-4">Solo mode is perfect when you want to focus independently with financial stakes.</p>
+    
+    <h2 class="text-xl font-semibold mb-3">How Solo Mode Works:</h2>
+    
+    <ol class="list-decimal ml-6 mb-4">
+      <li class="mb-3">
+        <strong>Set Your Goal</strong>
+        <p>Clearly define what you'll accomplish in 25 minutes (code a feature, write 500 words, etc.)</p>
+      </li>
+      
+      <li class="mb-3">
+        <strong>Select Activity Type</strong>
+        <p>Choose from coding, writing, reading, or other activities</p>
+      </li>
+      
+      <li class="mb-3">
+        <strong>Stake Credits</strong>
+        <p>Put at least 1 credit on the line to motivate yourself</p>
+      </li>
+      
+      <li class="mb-3">
+        <strong>Complete the Session</strong>
+        <p>Work for 25 minutes on your task</p>
+      </li>
+      
+      <li class="mb-3">
+        <strong>Submit Proof</strong>
+        <p>At the end, submit proof of your work for validation</p>
+      </li>
+    </ol>
+    
+    <p class="bg-yellow-100 p-3 rounded">
+      <strong>Tip:</strong> Start with a small, specific goal that you can definitely accomplish in 25 minutes.
+    </p>
+  </div>
+  
+  <div class="text-center">
+    <div class="flex justify-between">
+      <%= link_to "← Back", onboarding_credits_path, class: "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded" %>
+      <%= link_to "Next: Paired Mode", onboarding_paired_mode_path, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded" %>
+    </div>
+  </div>
+</div>
