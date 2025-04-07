@@ -1,6 +1,6 @@
 class DashboardController < ApplicationController
-  before_action :authenticate_user!
-  before_action :check_onboarding
+  skip_before_action :authenticate_user!
+  #skip_before_action :check_onboarding
   
   def index
     # Dashboard content will go here

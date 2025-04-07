@@ -1,6 +1,6 @@
 class OnboardingController < ApplicationController
-  before_action :authenticate_user!
-  before_action :check_onboarding_status, except: [:complete]
+  skip_before_action :authenticate_user!
+  #before_action :check_onboarding_status, except: [:complete]
   layout "onboarding"
   
   def welcome
