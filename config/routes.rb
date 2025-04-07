@@ -1,20 +1,23 @@
 Rails.application.routes.draw do
-  devise_for :users
+  # Devise routes with custom controller
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Onboarding routes
-  get 'onboarding/welcome', to: 'onboarding#welcome', as: :onboarding_welcome
-  get 'onboarding/credits', to: 'onboarding#credits', as: :onboarding_credits
-  get 'onboarding/solo_mode', to: 'onboarding#solo_mode', as: :onboarding_solo_mode
-  get 'onboarding/paired_mode', to: 'onboarding#paired_mode', as: :onboarding_paired_mode
-  get 'onboarding/validation', to: 'onboarding#validation', as: :onboarding_validation
-  get 'onboarding/complete', to: 'onboarding#complete', as: :onboarding_complete
+  get 'onboarding/welcome'
+  get 'onboarding/credits'
+  get 'onboarding/solo_mode'
+  get 'onboarding/paired_mode'
+  get 'onboarding/validation'
+  get 'onboarding/complete'
   
-  # Add a dashboard route
-  get 'dashboard', to: 'dashboard#index', as: :dashboard
+  # Dashboard
+  get 'dashboard', to: 'dashboard#index'
   
-  # Define root path
-  root "dashboard#index"
+  # Set root path
+  root 'dashboard#index'
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
