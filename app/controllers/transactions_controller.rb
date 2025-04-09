@@ -78,4 +78,50 @@ class TransactionsController < ApplicationController
     # Redirect to dashboard
     redirect_to dashboard_path
   end
+
+  # Webhooks for asynchronous notifications from Paystack (optional, but recommended)
+  def webhook
+    # Verify webhook signature
+    payload = request.body.read
+    signature = request.headers['HTTP_X_PAYSTACK_SIGNATURE']
+    
+    # Verify webhook is from Paystack (very important for security)
+    if verify_webhook(payload, signature)
+      # Process the webhook data
+      process_webhook(payload)
+    end
+    
+    # Always return 200 to Paystack
+    head :ok
+  end
+  
+  private
+  
+  def verify_webhook(payload, signature)
+    # Simple signature verification
+    digest = OpenSSL::Digest.new('sha512')
+    calculated_signature = OpenSSL::HMAC.hexdigest(digest, Rails.application.credentials.paystack[:secret_key], payload)
+    
+    Rack::Utils.secure_compare(calculated_signature, signature)
+  end
+  
+  def process_webhook(payload)
+    data = JSON.parse(payload)
+    event = data['event']
+    
+    # Only process charge.success events
+    if event == 'charge.success'
+      reference = data['data']['reference']
+      transaction = Transaction.find_by(paystack_reference: reference)
+      
+      if transaction && transaction.status != 'completed'
+        transaction.update(status: 'completed')
+        
+        # Add credits to user
+        user = transaction.user
+        user.credits += transaction.amount
+        user.save
+      end
+    end
+  end
 end
