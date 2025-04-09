@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "transactions/new"
+  get "transactions/create"
+  get "transactions/success"
   # Devise routes with custom controller
   devise_for :users, controllers: {
     registrations: 'users/registrations'

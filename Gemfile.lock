@@ -110,6 +110,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    domain_name (0.6.20240107)
     dotenv (3.1.7)
     dotenv-rails (3.1.7)
       dotenv (= 3.1.7)
@@ -132,6 +133,9 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    http-accept (1.7.0)
+    http-cookie (1.0.8)
+      domain_name (~> 0.5)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.1.0)
@@ -205,6 +209,7 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     net-ssh (7.3.0)
+    netrc (0.11.0)
     nio4r (2.7.4)
     nokogiri (1.18.7-aarch64-linux-gnu)
       racc (~> 1.4)
@@ -224,6 +229,8 @@ GEM
     parser (3.3.7.4)
       ast (~> 2.4.1)
       racc
+    paystack (0.1.10)
+      rest-client (~> 2.0)
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
@@ -289,6 +296,11 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.4.1)
     rubocop (1.75.1)
       json (~> 2.3)
@@ -414,6 +426,7 @@ DEPENDENCIES
   kamal
   letter_opener
   mailgun-ruby
+  paystack (~> 0.1.10)
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)

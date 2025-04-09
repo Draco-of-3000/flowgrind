@@ -34,6 +34,9 @@ gem 'mailgun-ruby'
 # Assets and frontend
 gem "tailwindcss-rails"
 
+# paystack
+gem 'paystack', '~> 0.1.10'
+
 # dotenv gem
 gem 'dotenv-rails'
 
