@@ -3,7 +3,6 @@ class TransactionsController < ApplicationController
 
   def new
     # Pre-defined credit packages
-
     @credit_packages = [
       { amount: 5, price: 5 },
       { amount: 10, price: 10 },

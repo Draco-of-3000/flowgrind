@@ -1,4 +1,41 @@
-<div>
-  <h1 class="font-bold text-4xl">Transactions#new</h1>
-  <p>Find me in app/views/transactions/new.html.erb</p>
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold text-center mb-6">Add Credits</h1>
+  
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <p class="mb-4">Your current balance: <strong><%= current_user.credits %> credits</strong></p>
+    
+    <p class="mb-6">Select a credit package below or enter a custom amount.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <% @credit_packages.each do |package| %>
+        <div class="border rounded-lg p-4 relative hover:bg-gray-50">
+          <% if package[:amount] == 50 %>
+            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">SAVE $5</span>
+          <% end %>
+          
+          <h3 class="font-bold text-xl mb-1"><%= package[:amount] %> Credits</h3>
+          <p class="text-gray-600 mb-4">$<%= package[:price] %></p>
+          
+          <%= button_to "Buy Now", transactions_path, params: { amount: package[:price] }, method: :post, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full" %>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="border-t pt-6">
+      <h3 class="font-semibold mb-2">Custom Amount</h3>
+      <%= form_with url: transactions_path, method: :post, class: "flex items-center" do |f| %>
+        <div class="mr-2">
+          <%= f.label :amount, "Amount ($):", class: "sr-only" %>
+          <%= f.number_field :amount, min: 1, max: 1000, class: "border rounded py-2 px-3", placeholder: "Enter amount" %>
+        </div>
+        <%= f.submit "Purchase", class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="bg-gray-100 rounded-lg p-4 text-sm text-gray-600">
+    <p>• 1 credit = $1</p>
+    <p>• Credits are used to stake on focus sessions</p>
+    <p>• Payments are processed securely via Paystack</p>
+  </div>
 </div>
