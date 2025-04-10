@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_09_023839) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_10_095517) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_09_023839) do
     t.string "status", default: "pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "metadata"
+    t.string "ip_address"
+    t.string "browser_fingerprint"
+    t.string "currency_used"
     t.index ["paystack_reference"], name: "index_transactions_on_paystack_reference", unique: true
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end

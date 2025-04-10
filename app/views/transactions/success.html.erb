@@ -1,4 +1,33 @@
-<div>
-  <h1 class="font-bold text-4xl">Transactions#success</h1>
-  <p>Find me in app/views/transactions/success.html.erb</p>
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <div class="text-center mb-8">
+    <svg class="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    
+    <h1 class="text-3xl font-bold mt-4">Payment Successful!</h1>
+    <p class="text-gray-600 mt-2">Your credits have been added to your account.</p>
+  </div>
+  
+  <div class="bg-white shadow rounded-lg p-6 mb-6">
+    <div class="flex items-center justify-between mb-4 pb-4 border-b">
+      <span class="text-gray-600">Current Balance:</span>
+      <span class="text-2xl font-bold"><%= current_user.credits %> credits</span>
+    </div>
+    
+    <div class="flex items-center justify-between mb-6">
+      <span class="text-gray-600">Transaction Status:</span>
+      <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Completed</span>
+    </div>
+    
+    <p class="text-sm text-gray-500 mb-4">
+      A receipt has been sent to your email address.
+    </p>
+  </div>
+  
+  <div class="text-center">
+    <div class="space-x-4">
+      <%= link_to "Go to Dashboard", dashboard_path, class: "bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded" %>
+      <%= link_to "Start a Session", dashboard_path, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded" %>
+    </div>
+  </div>
 </div>
