@@ -1,6 +1,10 @@
 class TransactionsController < ApplicationController
-  before_action :authenticate_user
-
+  before_action :authenticate_user!
+  rescue_from StandardError, with: :handle_payment_error
+  
+  # Tolerance percentage for amount verification (5%)
+  AMOUNT_TOLERANCE_PERCENTAGE = 0.05
+  
   def new
     # Pre-defined credit packages
     @credit_packages = [
@@ -10,7 +14,7 @@ class TransactionsController < ApplicationController
       { amount: 50, price: 45 } # $5 discount for bulk purchase
     ]
   end
-
+  
   def create
     # Get the amount with proper precision
     amount_in_dollars = BigDecimal(params[:amount].to_s)
@@ -62,7 +66,7 @@ class TransactionsController < ApplicationController
       redirect_to new_transaction_path
     end
   end
-
+  
   def success
     reference = params[:reference]
     
@@ -78,21 +82,39 @@ class TransactionsController < ApplicationController
         if result['status'] && result['data']['status'] == 'success'
           # Log the currency used (for analytics/audit)
           transaction_currency = result['data']['currency']
-          
-          # Check that the amount matches what we expect
-          # For international transactions, we're verifying the amount after conversion
-          expected_amount = (transaction.amount * 100).to_i
           actual_amount = result['data']['amount'].to_i
+          expected_amount = (transaction.amount * 100).to_i
           
-          if actual_amount == expected_amount
+          # Calculate acceptable amount range with tolerance
+          min_acceptable = (expected_amount * (1 - AMOUNT_TOLERANCE_PERCENTAGE)).to_i
+          max_acceptable = (expected_amount * (1 + AMOUNT_TOLERANCE_PERCENTAGE)).to_i
+          
+          # Check if amount is within acceptable range
+          if actual_amount >= min_acceptable && actual_amount <= max_acceptable
+            # Amount is within tolerance - proceed with completion
+            
+            # Calculate exact difference for audit purposes
+            amount_difference = actual_amount - expected_amount
+            amount_difference_percentage = (amount_difference.to_f / expected_amount) * 100
+            
+            # Log the difference for reconciliation
+            Rails.logger.info(
+              "PAYMENT CONVERSION: Transaction #{transaction.id} " +
+              "Expected: #{expected_amount}, Received: #{actual_amount}, " +
+              "Difference: #{amount_difference} (#{amount_difference_percentage.round(2)}%), " +
+              "Currency: #{transaction_currency}"
+            )
+            
             # Update transaction with verification data and currency info
             transaction.update(
               status: 'completed',
               metadata: result['data'].to_json,
-              currency_used: transaction_currency
+              currency_used: transaction_currency,
+              amount_received: actual_amount / 100.0  # Store actual amount received for accounting
             )
             
             # Atomically update user credits and total earned
+            # We credit the user with what they paid for, not the actual amount received
             transaction.user.with_lock do
               User.where(id: transaction.user_id).update_all(
                 "credits = credits + #{transaction.amount}, " +
@@ -102,16 +124,24 @@ class TransactionsController < ApplicationController
             
             flash[:notice] = "Successfully added #{transaction.amount} credits to your account!"
           else
-            # Amount mismatch is concerning - log it but don't automatically assume fraud
-            # Could be due to currency conversion rates or other legitimate factors
+            # Amount outside of tolerance - flag for review
             log_amount_discrepancy(transaction, actual_amount, expected_amount, transaction_currency)
-            transaction.update(
-              status: 'amount_mismatch',
-              metadata: result['data'].to_json,
-              currency_used: transaction_currency
-            )
             
-            flash[:alert] = "Payment verification issue. Please contact support with reference: #{reference}"
+            # If amount is higher than expected, it's likely not fraud but still needs review
+            if actual_amount > max_acceptable
+              status = 'amount_higher'
+              flash[:alert] = "Payment verification issue. Your payment appears to be higher than expected. Our team will review and credit your account accordingly."
+            else
+              status = 'amount_lower'
+              flash[:alert] = "Payment verification issue. Please contact support with reference: #{reference}"
+            end
+            
+            transaction.update(
+              status: status,
+              metadata: result['data'].to_json,
+              currency_used: transaction_currency,
+              amount_received: actual_amount / 100.0  # Store for reconciliation
+            )
           end
         else
           # Payment failed validation from Paystack
@@ -128,7 +158,7 @@ class TransactionsController < ApplicationController
     # Redirect to dashboard
     redirect_to dashboard_path
   end
-
+  
   def webhook
     # Verify webhook signature and IP
     payload = request.body.read
@@ -151,17 +181,34 @@ class TransactionsController < ApplicationController
           browser_fingerprint = generate_browser_fingerprint(request)
           transaction.update(browser_fingerprint: browser_fingerprint)
           
-          # Verify amount matches what was expected after any currency conversion
-          expected_amount = (transaction.amount * 100).to_i
-          actual_amount = data['data']['amount'].to_i
+          # Verify amount is within acceptable range
           transaction_currency = data['data']['currency']
+          actual_amount = data['data']['amount'].to_i
+          expected_amount = (transaction.amount * 100).to_i
           
-          if actual_amount == expected_amount
+          # Calculate acceptable amount range with tolerance
+          min_acceptable = (expected_amount * (1 - AMOUNT_TOLERANCE_PERCENTAGE)).to_i
+          max_acceptable = (expected_amount * (1 + AMOUNT_TOLERANCE_PERCENTAGE)).to_i
+          
+          if actual_amount >= min_acceptable && actual_amount <= max_acceptable
+            # Calculate exact difference for audit purposes
+            amount_difference = actual_amount - expected_amount
+            amount_difference_percentage = (amount_difference.to_f / expected_amount) * 100
+            
+            # Log the difference for reconciliation
+            Rails.logger.info(
+              "WEBHOOK PAYMENT CONVERSION: Transaction #{transaction.id} " +
+              "Expected: #{expected_amount}, Received: #{actual_amount}, " +
+              "Difference: #{amount_difference} (#{amount_difference_percentage.round(2)}%), " +
+              "Currency: #{transaction_currency}"
+            )
+            
             # Update transaction status, metadata, and currency info
             transaction.update(
               status: 'completed',
               metadata: data['data'].to_json,
-              currency_used: transaction_currency
+              currency_used: transaction_currency,
+              amount_received: actual_amount / 100.0  # Store actual amount received
             )
             
             # Atomically update user credits and total earned
@@ -172,12 +219,17 @@ class TransactionsController < ApplicationController
               )
             end
           else
-            # Amount mismatch - log the discrepancy
+            # Amount outside of tolerance - flag for review
             log_amount_discrepancy(transaction, actual_amount, expected_amount, transaction_currency)
+            
+            # Determine appropriate status based on direction of discrepancy
+            status = actual_amount > max_acceptable ? 'amount_higher' : 'amount_lower'
+            
             transaction.update(
-              status: 'amount_mismatch',
+              status: status,
               metadata: data.to_json,
-              currency_used: transaction_currency
+              currency_used: transaction_currency,
+              amount_received: actual_amount / 100.0
             )
           end
         end
@@ -224,11 +276,15 @@ class TransactionsController < ApplicationController
   end
   
   def log_amount_discrepancy(transaction, actual, expected, currency)
+    difference = actual - expected
+    difference_percentage = (difference.to_f / expected) * 100
+    
     Rails.logger.warn(
       "AMOUNT DISCREPANCY: Transaction #{transaction.id} " +
       "for user #{transaction.user_id}. " +
-      "Expected: #{expected}, Received: #{actual}, Currency: #{currency}. " +
-      "IP: #{request.remote_ip}"
+      "Expected: #{expected}, Received: #{actual}, " +
+      "Difference: #{difference} (#{difference_percentage.round(2)}%), " +
+      "Currency: #{currency}, IP: #{request.remote_ip}"
     )
   end
   

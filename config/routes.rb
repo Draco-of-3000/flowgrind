@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  
+
   # Devise routes with custom controller
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
   }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,15 +17,17 @@ Rails.application.routes.draw do
   
   # Dashboard
   get 'dashboard', to: 'dashboard#index'
-  
-  # Set root path
-  root 'dashboard#index'
+
+  devise_scope :user do
+    root to: 'devise/sessions#new'
+  end
 
   resources :transactions, only: [:new, :create] do
     collection do
       get :success
       post :webhook
     end
+  end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
